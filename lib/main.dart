@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
             'Muhammad Alfin Nur Huda',
             style: TextStyle(color: Colors.white),
           ),
+          centerTitle: true,
           backgroundColor: Colors.blueAccent,
         ),
         body: Center(child: Text('Halo Selamat Datang di Flutter')),
