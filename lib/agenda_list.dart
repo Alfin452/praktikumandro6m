@@ -44,37 +44,49 @@ class _AgendaListState extends State<AgendaList> {
               itemCount: data.length,
               itemBuilder: (_, i) {
                 final item = data[i];
-                return ListTile(
-                  title: Text(item.judul),
-                  subtitle: Text(item.keterangan),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AgendaForm(agenda: item),
-                            ),
-                          );
-                          if (result == true) _refresh();
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => _delete(item.id!),
-                      ),
-                    ],
+                return Card(
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: ListTile(
+                    title: Text(item.judul),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.keterangan),
+                        Text('Alamat: ${item.alamat}'),
+                        Text('Tanggal: ${item.tanggal}'),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AgendaForm(agenda: item),
+                              ),
+                            );
+                            if (result == true) _refresh();
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _delete(item.id!),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
             );
           }
+
           if (snapshot.hasError) {
             return Center(child: Text('Gagal memuat: ${snapshot.error}'));
           }
+
           return const Center(child: CircularProgressIndicator());
         },
       ),

@@ -14,6 +14,8 @@ class _AgendaFormState extends State<AgendaForm> {
   final _formKey = GlobalKey<FormState>();
   final _judul = TextEditingController();
   final _ket = TextEditingController();
+  final _alamat = TextEditingController(); // ✅ Tambahan
+  final _tanggal = TextEditingController(); // ✅ Tambahan
   final _service = AgendaService();
 
   @override
@@ -22,6 +24,8 @@ class _AgendaFormState extends State<AgendaForm> {
     if (widget.agenda != null) {
       _judul.text = widget.agenda!.judul;
       _ket.text = widget.agenda!.keterangan;
+      _alamat.text = widget.agenda!.alamat;
+      _tanggal.text = widget.agenda!.tanggal;
     }
   }
 
@@ -31,6 +35,8 @@ class _AgendaFormState extends State<AgendaForm> {
         id: widget.agenda?.id,
         judul: _judul.text,
         keterangan: _ket.text,
+        alamat: _alamat.text,
+        tanggal: _tanggal.text,
       );
       try {
         if (widget.agenda == null) {
@@ -47,6 +53,20 @@ class _AgendaFormState extends State<AgendaForm> {
     }
   }
 
+  Future<void> _selectTanggal() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(_tanggal.text) ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        _tanggal.text = picked.toIso8601String().substring(0, 10);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +77,7 @@ class _AgendaFormState extends State<AgendaForm> {
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               TextFormField(
                 controller: _judul,
@@ -68,6 +88,16 @@ class _AgendaFormState extends State<AgendaForm> {
               TextFormField(
                 controller: _ket,
                 decoration: const InputDecoration(labelText: 'Keterangan'),
+              ),
+              TextFormField(
+                controller: _alamat,
+                decoration: const InputDecoration(labelText: 'Alamat'),
+              ),
+              TextFormField(
+                controller: _tanggal,
+                decoration: const InputDecoration(labelText: 'Tanggal'),
+                readOnly: true,
+                onTap: _selectTanggal,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
